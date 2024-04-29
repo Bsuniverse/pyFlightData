@@ -181,7 +181,7 @@ def get_ul_list_number(chrome) -> int:
     return int(li_number)
 
 
-def chrome_runner(user_name="SJZX_201528", user_password="dTMfHR3P9a!"):
+def chrome_runner(user_name, user_password):
     # 使用工具类来获取options配置，而不是平时的webdriver.ChromeOptions()方法
     options = get_log_options()
     chrome = webdriver.Chrome(options=options)

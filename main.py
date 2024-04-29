@@ -41,7 +41,8 @@ def json_compare(
     }
     with tqdm.tqdm(**tqdm_params) as pb:
         for i in range(1, li_number + 1):
-            pb.update(i)
+            # 每下载一页数据，进度条＋1
+            pb.update(1)
             res_json = flight_spider.get_uids(str(i), token, cookie)
             whole_json_list = whole_json_list + json.loads(res_json)["result"]["list"]
 
