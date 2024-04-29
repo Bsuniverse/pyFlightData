@@ -118,14 +118,17 @@ def download_files(user, password, config_dir, output_folder, file_type, log):
         json.dump(json.loads(json.dumps(whole_json_list)), f)
 
     if file_type.lower() == "JSON".lower():
+        folder_creator(os.path.join(output_folder, "TXT"))
         # json格式的数据爬取，特点：数据容易不全，但是会精确定位到需求变量
         # 遍历已经下好的文件
+        need_vars = get_need_vars_from_csv(os.path.join(config_dir, "need_vars.csv"))
+        need_vars_str = ",".join(need_vars)
         for json_list in whole_json_list:
             front_name = f"{json_list['acReg']}_{json_list['uid8']}"
             if json_list["uid8"] in added_ui8_set:
-                file_name = os.path.join(output_folder, "json", front_name)
+                file_name = os.path.join(output_folder, "TXT", front_name)
                 flight_spider.download_load_by_uid8(
-                    json_list["uid8"], token=token, cookie=cookie, path=file_name
+                    json_list["uid8"], token=token, cookie=cookie, path=file_name, need_vars=need_vars_str
                 )
             else:
                 logger.info("%s.txt已经存在，跳过", front_name)

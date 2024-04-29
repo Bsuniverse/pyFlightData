@@ -6,7 +6,7 @@ __pycache__/
 # zip和txt文件
 *.zip
 *.txt
-C919_data/Archive
+C919_data/
 logs/
 
 # Distribution / packaging

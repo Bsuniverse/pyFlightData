@@ -38,8 +38,8 @@ class FlightSpider:
             logger.warning("statusCode = %s", res.status_code)
             return False
 
-    def download_load_by_uid8(self, uid_8, token, cookie, path):
-        url = f"https://cis.comac.cc:8053/api/vis/api/v2/getHiveData?id={uid_8}&dataType=EAFR&params=UTCData,CG1_0_01_R,CG1_0_1_R,CG1_100_R,CG1_10_R,CG1_1_R,GrossWt_R,AltPrVtd_1,Flap2_Mon,Slat2_Mon,CAS_Vtd_1,AOA_1,DrftAngl_1,Rudder_1,AilL_1,AilR_1,Stab_1,ElevL_1,ElevR_1,MFS_2L_Pos1,MFS_2R_Pos1,MFS_3L_Pos1,MFS_3R_Pos1,MFS_4L_Pos1,MFS_4R_Pos1,MFS_5L_Pos1,MFS_5R_Pos1,_TriaxLong,_TriaxVert,_TriaxLat,Pitch_3,HdgMag_1,Roll_3,Eng2N1Act_A,Eng1N1Act_B,GearWOWAll_1,StkPsnPCmb_1,StkPsnRCmb_1,RPP_1&timeStamp=true&jsonStream=true&sf_request_type=ajax"
+    def download_load_by_uid8(self, uid_8, token, cookie, path, need_vars):
+        url = f"https://cis.comac.cc:8053/api/vis/api/v2/getHiveData?id={uid_8}&dataType=EAFR&params=UTCData,{need_vars}&timeStamp=true&jsonStream=true&sf_request_type=ajax"
 
         header = {
             "Accept": "application/json, text/plain, */*",
@@ -103,12 +103,15 @@ class FlightSpider:
 def get_log_options():
     save_folder = "./Downloads"
     option = webdriver.ChromeOptions()
+    option.add_argument("log-level=3")    # 控制log-level,抑制error出现
     option.add_argument("--no-sandbox")
     # option.add_argument('--headless')  # 设置无头浏览
     option.add_argument("--disable-extensions")
     option.add_argument("--disable-infobars")  # 禁用浏览器正在被自动化程序控制的提示
     option.add_argument("--allow-running-insecure-content")
     option.add_argument("--ignore-certificate-errors")
+    option.add_argument("--ignore-ssl-errors")
+    option.add_argument("--enable-chrome-browser-cloud-management")
     # option.add_argument("--disable-single-click-autofill")
     # option.add_argument("--disable-autofill-keyboard-accessory-view[8]")
     # option.add_argument("--disable-full-form-autofill-ios")
