@@ -149,7 +149,7 @@ def download_files(user, password, config_dir, output_folder, file_type, log):
                     )
                 except requests.HTTPError as e:
                     logger.warning("出现%s, 可能cookies过期，尝试重新获取cookies", e)
-                    chrome, token, cookie = chrome_runner()
+                    chrome, token, cookie = chrome_runner(user, password)
                     flight_spider.download_by_uid8(
                         json_list["uid8"], token=token, cookie=cookie, path=file_name
                     )
