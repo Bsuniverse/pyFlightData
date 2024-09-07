@@ -63,7 +63,8 @@ class FlightSpider:
                     save_json_date(json_data, f"{path}.txt")
             except json.decoder.JSONDecodeError:
                 logger.warning(
-                    "Response is empty or data is not valid JSON, data uid8 is %s.", uid_8
+                    "Response is empty or data is not valid JSON, data uid8 is %s.",
+                    uid_8,
                 )
 
     def download_by_uid8(self, uid_8, token, cookie, path):
@@ -103,7 +104,7 @@ class FlightSpider:
 def get_log_options():
     save_folder = "./Downloads"
     option = webdriver.ChromeOptions()
-    option.add_argument("log-level=3")    # 控制log-level,抑制error出现
+    option.add_argument("log-level=3")  # 控制log-level,抑制error出现
     option.add_argument("--no-sandbox")
     # option.add_argument('--headless')  # 设置无头浏览
     option.add_argument("--disable-extensions")
@@ -115,20 +116,21 @@ def get_log_options():
     # option.add_argument("--disable-single-click-autofill")
     # option.add_argument("--disable-autofill-keyboard-accessory-view[8]")
     # option.add_argument("--disable-full-form-autofill-ios")
-    option.add_argument(
-        "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:55.0) Gecko/20100101 Firefox/55.0"
-    )
-    option.add_experimental_option(
-        "prefs",
-        {
-            # 不弹出去请求
-            "profile.default_content_settings.popups": 0,
-            # 设置默认下载文件目录
-            "download.default_directory": save_folder,
-            # 禁止提示
-            "profile.default_content_setting_values": {"notifications": 2},
-        },
-    )
+    # option.add_argument(
+    #     "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:55.0) Gecko/20100101 Firefox/55.0"
+    # )
+    option.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+    # option.add_experimental_option(
+    #     "prefs",
+    #     {
+    #         # 不弹出去请求
+    #         "profile.default_content_settings.popups": 0,
+    #         # 设置默认下载文件目录
+    #         "download.default_directory": save_folder,
+    #         # 禁止提示
+    #         "profile.default_content_setting_values": {"notifications": 2},
+    #     },
+    # )
 
     return option
 
@@ -191,22 +193,22 @@ def chrome_runner(user_name, user_password):
     chrome.get("https://cis.comac.cc:8053/dashboard")  # "https://www.baidu.com/"
     chrome.maximize_window()
 
-    # 输入账号和密码
-    element_account = get_element(
-        chrome, (By.XPATH, '//*[@id="Calc"]/div[2]/div[1]/div[1]/div/div[1]/input')
-    )
-    ActionChains(chrome).send_keys_to_element(element_account, user_name).perform()
-    element_passwd = chrome.find_element(by=By.XPATH, value='//*[@id="loginPwd"]')
-    ActionChains(chrome).click(element_passwd).send_keys_to_element(
-        element_passwd, user_password
-    ).perform()
-    # 勾选登录框并进行登录
-    chrome.find_element(
-        by=By.XPATH, value='//*[@id="Calc"]/div[4]/span[1]/div[1]'
-    ).click()
-    chrome.find_element(by=By.XPATH, value='//*[@id="Calc"]/div[5]/button').click()
+    # # 输入账号和密码
+    # element_account = get_element(
+    #     chrome, (By.XPATH, '//*[@id="Calc"]/div[2]/div[1]/div[1]/div/div[1]/input')
+    # )
+    # ActionChains(chrome).send_keys_to_element(element_account, user_name).perform()
+    # element_passwd = chrome.find_element(by=By.XPATH, value='//*[@id="loginPwd"]')
+    # ActionChains(chrome).click(element_passwd).send_keys_to_element(
+    #     element_passwd, user_password
+    # ).perform()
+    # # 勾选登录框并进行登录
+    # chrome.find_element(
+    #     by=By.XPATH, value='//*[@id="Calc"]/div[4]/span[1]/div[1]'
+    # ).click()
+    # chrome.find_element(by=By.XPATH, value='//*[@id="Calc"]/div[5]/button').click()
     # 点击cis自动登录
-    time.sleep(2)
+    time.sleep(30)
     element_cis = get_element(
         chrome, (By.XPATH, '//*[@id="app"]/div/form/div[2]/div/div[4]/span')
     )

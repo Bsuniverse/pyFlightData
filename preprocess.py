@@ -1,11 +1,13 @@
-import glob
-import zipfile
 import csv
+import glob
 import io
 import os
 import sys
+import zipfile
 from collections import Counter, defaultdict
+
 import tqdm
+
 from utility import save_dict_data
 
 
@@ -85,11 +87,14 @@ def process_zip_to_txt(zip_file, txt_file_s, need_vars, output_folder):
 
     if zip_file_header not in txt_file_s:
         header, real_data = get_csv_header_content(zip_file)
-        dict_data = gen_vars_dict(header, real_data, need_vars)
+        try:
+            dict_data = gen_vars_dict(header, real_data, need_vars)
 
-        # 保存处理dict_data到txt文件中
-        txt_file_name = os.path.join(output_folder, f"{zip_file_header}.txt")
-        save_dict_data(dict_data, txt_file_name)
+            # 保存处理dict_data到txt文件中
+            txt_file_name = os.path.join(output_folder, f"{zip_file_header}.txt")
+            save_dict_data(dict_data, txt_file_name)
+        except ValueError as e:
+            print(f"{zip_file_header}文件表头不全，具体报错为{e}")
     else:
         pass
         # print(f'{zip_file_header}已经处理过，无需重复处理')

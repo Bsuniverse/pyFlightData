@@ -1,12 +1,13 @@
+import datetime
+import logging
+import os
+import re
+import time
+import zipfile
+
 import numpy as np
 import pandas as pd
-import datetime
-import re
-import logging
-import zipfile
-import os, time
 from scipy import interpolate
-
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +52,9 @@ def trans_json_to_array(json_data):
         try:
             return np.asarray(list(json_data.values())).astype(float)
         except ValueError as e:
-            logger.info("遇到了无法直接转换为Float的数据格式，可能是时间格式，具体见报错:%s", e)
+            logger.info(
+                "遇到了无法直接转换为Float的数据格式，可能是时间格式，具体见报错:%s", e
+            )
             return np.asarray(list(json_data.values()))
 
 
@@ -122,7 +125,8 @@ def save_json_date(json_data, file_path):
                 json_dataframe[key] = value_list
             except ValueError as e:
                 logger.info(
-                    "可能出现罕见的部分时间段数据缺失错误，程序报错为%s\n将默认为后段数据丢失直接用NaN进行补齐", e
+                    "可能出现罕见的部分时间段数据缺失错误，程序报错为%s\n将默认为后段数据丢失直接用NaN进行补齐",
+                    e,
                 )
                 index_result = re.findall(r"\((\d*?)\)", repr(e))
                 larger_range = int(index_result[1])
@@ -162,7 +166,9 @@ def trans_list_to_array(list_data):
         try:
             return np.asarray(list_data).astype(float)
         except ValueError as e:
-            logger.info("遇到了无法直接转换为Float的数据格式，可能是时间格式，具体见报错%s", e)
+            logger.info(
+                "遇到了无法直接转换为Float的数据格式，可能是时间格式，具体见报错%s", e
+            )
             return np.asarray(list_data)
 
 
@@ -192,7 +198,8 @@ def save_dict_data(dict_data, file_path):
                 json_dataframe[key] = value_list
             except ValueError as e:
                 logger.info(
-                    "可能出现罕见的部分时间段数据缺失错误，程序报错为%s\n将默认为后段数据丢失直接用NaN进行补齐", e
+                    "可能出现罕见的部分时间段数据缺失错误，程序报错为%s\n将默认为后段数据丢失直接用NaN进行补齐",
+                    e,
                 )
                 index_result = re.findall(r"\((\d*?)\)", repr(e))
                 larger_range = int(index_result[1])

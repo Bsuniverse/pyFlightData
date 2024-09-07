@@ -159,10 +159,7 @@ def download_files(user, password, config_dir, output_folder, file_type, log):
                     )
 
                 # 提取zip文件
-                try:
-                    extract_zip(file_name, output_folder)
-                except:
-                    logger.error("%s.zip无法解压，跳过", front_name)
+                extract_zip(file_name, output_folder)
             else:
                 logger.info("%s.zip已经存在，跳过", front_name)
 
