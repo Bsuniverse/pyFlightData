@@ -10,7 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import TimeoutException, WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.common.action_chains import ActionChains
 
 
 logger = logging.getLogger(__name__)
@@ -102,7 +102,7 @@ class FlightSpider:
 
 
 def get_log_options():
-    save_folder = "./Downloads"
+    # save_folder = "./Downloads"
     option = webdriver.ChromeOptions()
     option.add_argument("log-level=3")  # 控制log-level,抑制error出现
     option.add_argument("--no-sandbox")
