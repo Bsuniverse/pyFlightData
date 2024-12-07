@@ -208,11 +208,11 @@ def chrome_runner(user_name, user_password):
     # ).click()
     # chrome.find_element(by=By.XPATH, value='//*[@id="Calc"]/div[5]/button').click()
     # 点击cis自动登录
-    time.sleep(30)
-    element_cis = get_element(
-        chrome, (By.XPATH, '//*[@id="app"]/div/form/div[2]/div/div[4]/span')
-    )
-    element_cis.click()
+    # time.sleep(30)
+    # element_cis = get_element(
+    #     chrome, (By.XPATH, '//*[@id="app"]/div/form/div[2]/div/div[4]/span')
+    # )
+    # element_cis.click()
     # 点击航线数据，进入下载界面
     element_skyline = get_element(
         chrome,

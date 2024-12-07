@@ -88,9 +88,14 @@ def process_zip_to_txt(zip_file, txt_file_s, need_vars, output_folder):
     zip_file_header = os.path.splitext(zip_file_header)[0]
 
     if zip_file_header not in txt_file_s:
-        header, real_data = get_csv_header_content(zip_file)
         try:
-            dict_data = gen_vars_dict(header, real_data, need_vars)
+            header, real_data = get_csv_header_content(zip_file)
+        except zipfile.BadZipFile as e:
+            print(f'文件{zip_file}损坏，具体报错为{e}')
+            return zip_file_header
+
+        try:
+            dict_data = gen_vars_dict(header, real_data, need_vars=need_vars)
 
             # 保存处理dict_data到txt文件中
             txt_file_name = os.path.join(output_folder, f"{zip_file_header}.txt")

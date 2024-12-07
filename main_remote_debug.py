@@ -27,7 +27,7 @@ def folder_creator(folder_name: str):
         os.mkdir(folder_name)
 
 
-def json_compare(
+def online_json_compare(
     chrome, flight_spider: FlightSpider, old_json_file: str, token, cookie
 ):
     # 获取最新、完整的json_list
@@ -58,6 +58,24 @@ def json_compare(
     return chrome, added_uid8_set, whole_json_list
 
 
+def offline_json_compare(
+    old_json_file: str, new_json_file:str 
+):
+    # 读取旧json_list
+    with open(old_json_file, "r") as f:
+        old_json_list = json.load(f)
+
+    # 读取新json_list
+    with open(new_json_file, "r") as f:
+        whole_json_list = json.load(f)
+
+    # 获取增量信息
+    old_uid8_set = set([flight_info["uid8"] for flight_info in old_json_list])
+    whole_uid8_set = set([flight_info["uid8"] for flight_info in whole_json_list])
+    added_uid8_set = whole_uid8_set - old_uid8_set
+
+    return added_uid8_set, whole_json_list
+
 @click.group(chain=True)
 def cli():
     pass
@@ -84,7 +102,8 @@ def cli():
 @click.option(
     "-t", "--file-type", type=click.Choice(["JSON", "CSV"], case_sensitive=False)
 )
-def download_files(user, password, config_dir, output_folder, file_type, log):
+@click.option("--from-start", type=click.Choice(["Yes", "No"], case_sensitive=False), help="选择是否重新从线上抓取航班列表，如果Yes，从线上抓取航班列表，并进行增量下载；如果No，从temp.json中得到航班列表进行增量下载")
+def download_files(user, password, config_dir, output_folder, file_type, log, from_start):
     # 创建文件夹
     folder_creator(output_folder)
     # 创建log文件夹
@@ -110,13 +129,20 @@ def download_files(user, password, config_dir, output_folder, file_type, log):
     py_dir = os.getcwd()
     os.chdir(py_dir)
 
-    # 获取所有运营数据列表和需要下载的uid8列表,并临时将所有运营数据列表储存在本地
-    chrome, added_ui8_set, whole_json_list = json_compare(
-        chrome, flight_spider, downloaded_list, token, cookie
-    )
-    # 临时储存结果到本地
-    with open(os.path.join(log, "temp.json"), "w") as f:
-        json.dump(json.loads(json.dumps(whole_json_list)), f)
+    if from_start.lower() == "yes":
+        # 获取所有运营数据列表和需要下载的uid8列表,并临时将所有运营数据列表储存在本地
+        chrome, added_ui8_set, whole_json_list = online_json_compare(
+            chrome, flight_spider, downloaded_list, token, cookie
+        )
+        # 临时储存结果到本地
+        with open(os.path.join(log, "temp.json"), "w") as f:
+            json.dump(json.loads(json.dumps(whole_json_list)), f)
+
+    elif from_start.lower() == "no":
+        temp_flight_list = os.path.join(log, "temp.json")
+        added_ui8_set, whole_json_list = offline_json_compare(
+            downloaded_list, temp_flight_list 
+        )
 
     if file_type.lower() == "JSON".lower():
         folder_creator(os.path.join(output_folder, "TXT"))
@@ -159,7 +185,10 @@ def download_files(user, password, config_dir, output_folder, file_type, log):
                     )
 
                 # 提取zip文件
-                extract_zip(file_name, output_folder)
+                try:
+                    extract_zip(file_name, output_folder)
+                except:  # noqa: E722
+                    logger.warning("%s.zip出错，跳过", front_name)
             else:
                 logger.info("%s.zip已经存在，跳过", front_name)
 
