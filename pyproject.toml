@@ -1,0 +1,16 @@
+[project]
+name = "pyflightdata"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1.8",
+    "numpy>=2.2.1",
+    "pandas>=2.2.3",
+    "pathos>=0.3.3",
+    "requests>=2.32.3",
+    "scipy>=1.14.1",
+    "selenium>=4.27.1",
+    "tqdm>=4.67.1",
+]
